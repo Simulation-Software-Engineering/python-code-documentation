@@ -8,9 +8,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def create_figure( fig, plt, u, n, fignum, dt, T_cold, T_hot ):
-    """
-    A method to create a subfigure that has the correct
+    """A method to create a subfigure that has the correct
     color scaling and title set
+
+    :param fig: Figure object
+    :type fig: `matplotlib.pyplot.figure`
+    :param plt: Plot object
+    :type plt: `matplotlib.pyplot`
+    :param u: Temperature field
+    :type u: `numpy.array`
+    :param n: nth time step
+    :type n: `int`
+    :param fignum: Number of figure
+    :type fignum: `int`
+    :param dt: Time step size
+    :type dt: `float`
+    :param T_cold: Temperature of cold boundary, defaults to 300.
+    :type T_cold: `float`
+    :param T_hot: Temperature of cold boundary, defaults to 4.
+    :type T_hot: `float`
+
+    :return: Returns current figure number and image object.
+    :rtype: `int`, `matplotlib.AxesImage`
     """
     fignum += 1
     ax = fig.add_subplot(220 + fignum)
@@ -21,9 +40,15 @@ def create_figure( fig, plt, u, n, fignum, dt, T_cold, T_hot ):
     return fignum, im
 
 def output_figure( fig, plt, im ):
-    """
-    A method to output the created figures on screen
+    """A method to output the created figures on screen
     and adds a corresponding colorbar
+
+    :param fig: Figure object
+    :type fig: `matplotlib.pyplot.figure`
+    :param plt: Plot object
+    :type plt: `matplotlib.pyplot`
+    :param im: Image object
+    :type im: `matplotlib.AxesImage`
     """
     fig.subplots_adjust(right=0.85)
     cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
@@ -32,13 +57,24 @@ def output_figure( fig, plt, im ):
     plt.show()
 
 class DiffusionSolver():
-    """
-    A class describing a finite-difference method for solving
-    the heat equation in 2 space dimensions.
+    """A class describing a finite-difference method for solving
+    the heat equation if 2 space dimentions.
     """
 
     def __init__(self, h = 10. , dx = 0.1, D = 4., T_cold = 300, T_hot = 700):
-        """Constructor"""
+        """Constructor
+
+        :param h: Domain height, defaults to 10.
+        :type h: `float`
+        :param dx: Mesh width in x-direction, defaults to 0.1
+        :type dx: `float`
+        :param D: Diffusion constant, defaults to 4.
+        :type D: `float`
+        :param T_cold: Temperature of cold boundary, defaults to 300.
+        :type T_cold: `float`
+        :param T_hot: Temperature of cold boundary, defaults to 4.
+        :type T_hot: `float`
+        """
         self.h = h
         self.w = self.h
         self.dx = dx
@@ -48,8 +84,7 @@ class DiffusionSolver():
         self.T_hot = T_hot
 
     def solve(self):
-        """
-        Solves the 2D heat equation for the parameters specified
+        """Solves the 2D heat equation for the parameters specified
         in the constructor
         """
         nx, ny = int(self.w / self.dx), int(self.h / self.dy)
@@ -70,7 +105,8 @@ class DiffusionSolver():
                     u0[i, j] = self.T_hot
 
         def do_timestep(u_nm1, u):
-            """Internal function that advances the solution by on time step dt"""
+            """Internal function that advances the solution by on time step dt
+            """
             # Propagate with forward-difference in time, central-difference in space
             u[1:-1, 1:-1] = u_nm1[1:-1, 1:-1] + self.D * dt * (
                     (u_nm1[2:, 1:-1] - 2 * u_nm1[1:-1, 1:-1] + u_nm1[:-2, 1:-1]) / dx2
