@@ -10,7 +10,7 @@ Welcome to Diffusion Solver's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   tutorials/overview.rst
+   tutorials/overview
 
 Indices and tables
 ==================
