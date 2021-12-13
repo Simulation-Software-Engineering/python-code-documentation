@@ -8,6 +8,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def create_figure( fig, plt, u, n, fignum, dt, T_cold, T_hot ):
+    """
+    A method to create a subfigure that has the correct
+    color scaling and title set
+    """
     fignum += 1
     ax = fig.add_subplot(220 + fignum)
     im = ax.imshow(u.copy(), cmap=plt.get_cmap('hot'), vmin=T_cold, vmax=T_hot)
@@ -17,6 +21,10 @@ def create_figure( fig, plt, u, n, fignum, dt, T_cold, T_hot ):
     return fignum, im
 
 def output_figure( fig, plt, im ):
+    """
+    A method to output the created figures on screen
+    and adds a corresponding colorbar
+    """
     fig.subplots_adjust(right=0.85)
     cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
     cbar_ax.set_xlabel('$T$ / K', labelpad=20)
@@ -24,8 +32,13 @@ def output_figure( fig, plt, im ):
     plt.show()
 
 class DiffusionSolver():
+    """
+    A class describing a finite-difference method for solving
+    the heat equation in 2 space dimensions.
+    """
 
     def __init__(self, h = 10. , dx = 0.1, D = 4., T_cold = 300, T_hot = 700):
+        """Constructor"""
         self.h = h
         self.w = self.h
         self.dx = dx
@@ -35,6 +48,10 @@ class DiffusionSolver():
         self.T_hot = T_hot
 
     def solve(self):
+        """
+        Solves the 2D heat equation for the parameters specified
+        in the constructor
+        """
         nx, ny = int(self.w / self.dx), int(self.h / self.dy)
 
         dx2, dy2 = self.dx * self.dx, self.dy * self.dy
@@ -53,6 +70,7 @@ class DiffusionSolver():
                     u0[i, j] = self.T_hot
 
         def do_timestep(u_nm1, u):
+            """Internal function that advances the solution by on time step dt"""
             # Propagate with forward-difference in time, central-difference in space
             u[1:-1, 1:-1] = u_nm1[1:-1, 1:-1] + self.D * dt * (
                     (u_nm1[2:, 1:-1] - 2 * u_nm1[1:-1, 1:-1] + u_nm1[:-2, 1:-1]) / dx2
